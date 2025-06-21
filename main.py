@@ -2,6 +2,7 @@ import math
 import plotly.express as px
 import logging
 import pandas as pd
+from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -53,7 +54,7 @@ class FloatRepresentation:
         value = (-1)**int(sign_bit) * mantissa * (2**exponent)
         return value
 
-    def get_value_range(self):
+    def get_range(self):
         """Calculate the value range of the float representation"""
         # Minimum positive value (denormalized)
         min_pos = self._binary_to_float('0' + '0' * self.exponent_bits + '0' * (self.mantissa_bits - 1) + '1')
@@ -101,13 +102,14 @@ if __name__ == "__main__":
     fp8e2m1 = FloatRepresentation(sign_bits=1, exponent_bits=2, mantissa_bits=1)
 
     # Collect values using get_values
-    float_values = {}
+    batch_values = {}
     for name, obj in [('fp16e5m10', fp16e5m10), ('fp8e4m3', fp8e4m3), ('fp8e5m2', fp8e5m2), ('fp8e2m1', fp8e2m1)]:
-        float_values[name] = obj.get_values()
+        values = obj.get_values()
+        batch_values[f"{name}, {len(values)} valid values"] = values
 
     # Prepare data for plotting
     df = pd.DataFrame()
-    for name, values in float_values.items():
+    for name, values in batch_values.items():
         temp_df = pd.DataFrame(values, columns=['Value'])
         temp_df['Type'] = name
         df = pd.concat([df, temp_df], ignore_index=True)
@@ -136,5 +138,6 @@ if __name__ == "__main__":
                       legend_title="Float Type")
 
     # Save as interactive HTML file
+    Path("./output").mkdir(parents=True, exist_ok=True)
     fig.write_html("./output/float_distribution_interactive.html")
     fig.show()
