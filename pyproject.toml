@@ -1,0 +1,17 @@
+[project]
+name = "anyfloatingpoint"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.3",
+    "numpy>=2.3.0",
+    "panda>=0.3.1",
+    "seaborn>=0.13.2",
+]
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.8.3",
+]
