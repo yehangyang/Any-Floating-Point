@@ -1,10 +1,8 @@
 import math
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
 import logging
 import pandas as pd
 
-# Configure logging with template format
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
@@ -97,7 +95,6 @@ class FloatRepresentation:
 
 
 if __name__ == "__main__":
-
     fp16e5m10 = FloatRepresentation(sign_bits=1, exponent_bits=5, mantissa_bits=10)
     fp8e4m3 = FloatRepresentation(sign_bits=1, exponent_bits=4, mantissa_bits=3)
     fp8e5m2 = FloatRepresentation(sign_bits=1, exponent_bits=5, mantissa_bits=2)
@@ -115,27 +112,29 @@ if __name__ == "__main__":
         temp_df['Type'] = name
         df = pd.concat([df, temp_df], ignore_index=True)
 
-    # Create distribution plot
-    plt.figure(figsize=(24, 16))
-    sns.histplot(
-        data=df,
+    # Create interactive distribution plot with Plotly
+    fig = px.histogram(
+        df,
         x="Value",
-        hue="Type",
-        multiple="stack",
-        palette="husl",  # Use a different color palette
-        kde=False,       # Do not add KDE line
-        stat="density",  # Normalize the histograms
-        common_norm=False,  # Allow each histogram to have its own normalization
-        alpha=0.7,        # Add transparency to see overlapping areas better
-        log_scale=(False, False)  # Set y-axis to log scale
-    )
-    plt.title('Float Value Distribution')
-    plt.xlabel('Value')
-    plt.ylabel('Density')
+        color="Type",
+        nbins=102400,  # Adjust bin count for better visualization
+        opacity=0.7,
+        barmode="stack",
+        log_y=True,
+        marginal="box",  # Add box plot for distribution details
+        title="Float Value Distribution (Interactive)",
+        labels={
+            "Value": "Value",
+            "Type": "Float Type"
+        })
 
-    # Save as vector graphic
-    plt.savefig('float_distribution.svg')
-    plt.close()
+    # Update layout for better visualization
+    fig.update_layout(xaxis_title="Value",
+                      yaxis_title="Count(log scale)",
+                      width=1200,
+                      height=800,
+                      legend_title="Float Type")
 
-
-
+    # Save as interactive HTML file
+    fig.write_html("./output/float_distribution_interactive.html")
+    fig.show()
