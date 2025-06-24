@@ -96,6 +96,8 @@ class FloatRepresentation:
 
 
 if __name__ == "__main__":
+    Path("./output").mkdir(parents=True, exist_ok=True)
+
     bf16e8m7 = FloatRepresentation(sign_bits=1, exponent_bits=8, mantissa_bits=7)
     fp16e5m10 = FloatRepresentation(sign_bits=1, exponent_bits=5, mantissa_bits=10)
     fp8e4m3 = FloatRepresentation(sign_bits=1, exponent_bits=4, mantissa_bits=3)
@@ -115,6 +117,7 @@ if __name__ == "__main__":
         temp_df = pd.DataFrame(values, columns=['Value'])
         temp_df['Type'] = name
         df = pd.concat([df, temp_df], ignore_index=True)
+
 
     # Create interactive distribution plot with Plotly
     fig = px.histogram(
@@ -140,6 +143,8 @@ if __name__ == "__main__":
                       legend_title="Float Type")
 
     # Save as interactive HTML file
-    Path("./output").mkdir(parents=True, exist_ok=True)
     fig.write_html("./output/float_distribution_interactive.html")
     fig.show()
+
+    # Save as csv
+    df.to_csv("./output/values.csv")
