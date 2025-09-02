@@ -102,12 +102,12 @@ if __name__ == "__main__":
     fp16e5m10 = FloatRepresentation(sign_bits=1, exponent_bits=5, mantissa_bits=10)
     fp8e4m3 = FloatRepresentation(sign_bits=1, exponent_bits=4, mantissa_bits=3)
     fp8e5m2 = FloatRepresentation(sign_bits=1, exponent_bits=5, mantissa_bits=2)
-    fp8e2m1 = FloatRepresentation(sign_bits=1, exponent_bits=2, mantissa_bits=1)
+    fp4e2m1 = FloatRepresentation(sign_bits=1, exponent_bits=2, mantissa_bits=1)
 
     # Collect values using get_values
     batch_values = {}
     for name, obj in [('bf16e8m7', bf16e8m7), ('fp16e5m10', fp16e5m10), ('fp8e4m3', fp8e4m3), ('fp8e5m2', fp8e5m2),
-                      ('fp8e2m1', fp8e2m1)]:
+                      ('fp4e2m1', fp4e2m1)]:
         values = obj.get_values()
         batch_values[f"{name}, {len(values)} valid values"] = values
 
